@@ -1,5 +1,3 @@
-# React + Vite
-
 # Dev.to en React
 
 El proyecto es un clon basico de la página dev.to desarrollado usando react para el front end

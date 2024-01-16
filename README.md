@@ -11,7 +11,7 @@ Se requiere tener instalado Node.js versión v20
 3. Instalar todas las dependencias: npm install
 4. Ejecutar la aplicacion: npm run dev
 
-## Tecnologias utilizas
+## Tecnologias utilizadas
 
 1. React
 2. TailwindCSS

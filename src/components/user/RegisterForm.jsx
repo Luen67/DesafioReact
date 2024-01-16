@@ -10,6 +10,7 @@ export default function RegisterForm() {
     formState: { errors, isSubmitting },
     setError,
   } = useForm();
+  const [base64Image, setBase64Image] = useState(null);
   const navigate = useNavigate();
   const colorInput = "text-gray-900 font-medium";
   const styleSpan = "inline-block text-red-500 p-1";
@@ -17,11 +18,24 @@ export default function RegisterForm() {
     "focus:outline-none focus:border-blue-500 focus:shadow-outline-blue bg-white border border-gray-300 px-4 py-2";
   const styleInput =
     "leading-6 p-[calc(0.5em-1.5px) 0.5em] font-inherit text-base w-full resize-y border-[1.5px] border-gray-300 bg-white text-gray-900 appearance-none border rounded-[0.375rem] transition-all duration-100";
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+
+    if (file) {
+      const reader = new FileReader();
+
+      reader.onloadend = () => {
+        setBase64Image(reader.result);
+      };
+
+      reader.readAsDataURL(file);
+    }
+  };
   const onSubmit = async (data) => {
     const response = await fetch("http://localhost:3000/users/", {
       method: "POST",
       body: JSON.stringify({
-        profile_image: "sdsdsdsd",
+        profile_image: base64Image,
         name: data.name,
         user_name: data.username,
         email: data.email,
@@ -32,7 +46,7 @@ export default function RegisterForm() {
       },
     });
     if (response.status === 201) {
-      alert("Usuario registrado exitosamente");
+      navigate("/");
     } else {
       alert("Se presento un error");
     }
@@ -56,6 +70,7 @@ export default function RegisterForm() {
           "rounded bg-white border-[rgb(64,64,64)] text-[rgb(64,64,64)] p-[0.75rem] flex items-center w-[100%]"
         )}
         {...register("profileImage")}
+        onChange={handleImageChange}
       />
       <p className={colorInput}>
         Name <span className={styleSpan}>*</span>

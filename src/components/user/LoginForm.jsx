@@ -31,7 +31,8 @@ export default function LoginForm() {
     const parsed = await response.json();
     console.log(parsed.data);
     if (response.status === 200) {
-      alert("Usuario identificado correctamente");
+      window.localStorage.setItem("token", parsed.data);
+      navigate("/");
     } else if (response.status === 401) {
       alert("Email y/o Password incorrectos");
     } else {

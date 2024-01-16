@@ -11,8 +11,22 @@ export default function PostForm() {
     setError,
   } = useForm();
   const [token, setToken] = useState("");
+  const [base64Image, setBase64Image] = useState(null);
   const [isLoggedIn, setisLoggedIn] = useState(false);
   const navigate = useNavigate();
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+
+    if (file) {
+      const reader = new FileReader();
+
+      reader.onloadend = () => {
+        setBase64Image(reader.result);
+      };
+
+      reader.readAsDataURL(file);
+    }
+  };
   useEffect(() => {
     setToken(window.localStorage.getItem("token"));
     if (token) {
@@ -20,7 +34,6 @@ export default function PostForm() {
     }
   }, []);
   const onSubmit = async (data) => {
-    console.log(token);
     const response = await fetch("http://localhost:3000/posts/", {
       method: "POST",
       headers: {
@@ -31,13 +44,16 @@ export default function PostForm() {
         Title: data.title,
         TeamName: "Prueba",
         Contenido: data.contenido,
-        Image:
-          "https://dev-to-uploads.s3.amazonaws.com/uploads/articles/9gl6twd8r59cvwqlllw7.jpg",
+        Image: base64Image,
         Tags: data.tags.split(","),
         DatePost: Date.now(),
         TimeRead: 3,
       }),
     });
+
+    if (response.status === 201) {
+      navigate("/");
+    }
   };
 
   return (
@@ -98,6 +114,7 @@ export default function PostForm() {
                     accept="image/*"
                     className="hidden"
                     {...register("image")}
+                    onChange={handleImageChange}
                   />
                 </label>
               </div>
